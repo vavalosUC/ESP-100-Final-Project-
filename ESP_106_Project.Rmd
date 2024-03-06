@@ -24,4 +24,8 @@ Precip_data <- read_csv("Precip_maybe.csv", skip = 5)
 head(Precip_data)
 ```
 
+```{r}
+fire_data<- read.csv("Fire_Data.csv", skip = 1)
+
+```
 
