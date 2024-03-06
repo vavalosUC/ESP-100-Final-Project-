@@ -18,14 +18,15 @@ head(Temp_data)
 ```
 
 ```{r}
-Precip_data <- read_csv("Precip_maybe.csv", skip = 5)
+Precip_data <- read.csv("Precip_maybe.csv", skip = 5)
 
 #Show data
 head(Precip_data)
 ```
 
 ```{r}
+#read in the fire data
 fire_data<- read.csv("Fire_Data.csv", skip = 1)
-
+head(fire_data)
 ```
 
