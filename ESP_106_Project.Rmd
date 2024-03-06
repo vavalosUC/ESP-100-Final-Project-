@@ -13,4 +13,8 @@ knitr::opts_chunk$set(echo = TRUE, root.dir=".")
 Temp_data <- read.csv("temp_W_data.csv", skip = 3)
 
 head(Temp_data)
-````
+```
+
+```{r}
+fire_data<- read.csv("Fire_Data.csv", skip = 1)
+```
