@@ -1,0 +1,11 @@
+---
+title: "ESP_106_project"
+output: html_document
+date: "2024-03-18"
+Author: "Lucas Michel and Victoria Avalos"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
