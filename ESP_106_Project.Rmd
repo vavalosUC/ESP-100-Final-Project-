@@ -10,7 +10,18 @@ knitr::opts_chunk$set(echo = TRUE, root.dir=".")
 ```
 
 ```{r}
+#Reading in Temperature Data 
 Temp_data <- read.csv("temp_W_data.csv", skip = 3)
 
+#Show data 
 head(Temp_data)
-````
+```
+
+```{r}
+Precip_data <- read_csv("Precip_maybe.csv", skip = 5)
+
+#Show data
+head(Precip_data)
+```
+
+
