@@ -10,16 +10,16 @@ knitr::opts_chunk$set(echo = TRUE, root.dir=".")
 ```
 
 ```{r}
-install.packages("tidyr")
-install.packages("ggplot2")
-install.packages("sf")
-install.packages("rnaturalearth")
-install.packages("rnaturalearthdata")
-install.packages("viridis")
-install.packages("raster")
-install.packages("cowplot")
-install.packages("dplyr")
-install.packages("tidyverse")
+# install.packages("tidyr")
+# install.packages("ggplot2")
+# install.packages("sf")
+# install.packages("rnaturalearth")
+# install.packages("rnaturalearthdata")
+# install.packages("viridis")
+# install.packages("raster")
+# install.packages("cowplot")
+# install.packages("dplyr")
+# install.packages("tidyverse")
 
 ```
 
@@ -35,7 +35,6 @@ library("cowplot")
 library("dplyr")
 library("tidyverse")
 
-
 ```
 
 
@@ -45,23 +44,35 @@ Temp_data <- read.csv("temp_W_data.csv", skip = 3)
 
 #Show data 
 head(Temp_data)
+
 ```
 
 ```{r}
+#Read in Precipitation data 
+
+#Precip 1 
+#not ideal 
 Precip_data <- read.csv("Precip_maybe.csv", skip = 5)
 
 #Show data
 head(Precip_data)
+
+#Precip
+#more ideal US Average volume of rain per year since 1900
+Precip_data_2 <- read.csv("statistic_id504400_annual-precipitation-volume-in-the-united-states-1900-2023.csv", skip = 2)
+
+head(Precip_data_2)
+
 ```
 
 ```{r}
 #read in the fire data
 fire_data<- read.csv("Fire_Data.csv", skip = 1)
 head(fire_data)
+
 ```
 
 ```{r}
 NOAA_Globe.file <- ("NOAAGlobalTemp_v6.0.0_gridded_s185001_e202401_c20240208T152650 (1).nc")
-
 
 ```
