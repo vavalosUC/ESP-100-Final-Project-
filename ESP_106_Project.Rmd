@@ -6,6 +6,11 @@ Author: "Lucas Michel and Victoria Avalos"
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = TRUE, root.dir=".")
 ```
 
+```{r}
+Temp_data <- read.csv("temp_W_data.csv", skip = 3)
+
+head(Temp_data)
+````
