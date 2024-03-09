@@ -66,6 +66,8 @@ head(Precip_data_2)
 
 
 ```
+
+
 ```{r}
 precip_plot <- ggplot(Precip_data_2, aes(x = Year, y = Precipitation.Volume.in.Inches)) +
   geom_line() +  # Plot the precipitation data as a line
@@ -78,6 +80,8 @@ precip_plot <- ggplot(Precip_data_2, aes(x = Year, y = Precipitation.Volume.in.I
 # Print the plot
 precip_plot
 ```
+
+
 ```{r}
 # Fit a linear model to the data
 linear_model <- lm(Precipitation.Volume.in.Inches ~ Year, data = Precip_data_2)
@@ -114,6 +118,7 @@ fire_data_filtered <- fire_data %>%
 head(fire_data_filtered)
 ```
 
+
 ```{r}
 #this plots the monthly trend of fires
 fire.plot.months<- ggplot(fire_data_filtered, aes(x = Date, y =Acres.Burned)) +
@@ -126,6 +131,8 @@ fire.plot.months<- ggplot(fire_data_filtered, aes(x = Date, y =Acres.Burned)) +
 
 fire.plot.months
 ```
+
+
 ```{r}
 #Assuming fire_data_filtered is already prepared
 #Fit a linear model to the data
@@ -151,6 +158,84 @@ equation_fire <- paste("y =", round(intercept_fire, digits = 2), "+", round(slop
 print(equation_fire)
 ```
 
+
+```{r}
+#This is the plot for the Amount of fires burned each year 
+
+fire.amount<- ggplot(fire_data_filtered, aes(x = Date, y = Number.of.Fires)) +
+  geom_point() +            
+  geom_line(color = "blue") + 
+   geom_smooth(method = "lm", se = FALSE, color = "hotpink")+ # Trend line
+  labs(title = "Correlation between Year and Number of Fires Burned",
+       x = "Year",
+       y = "Number of Fires")
+fire.amount
+
+```
+```{r}
+# Fit a linear model to the data for the number of fires
+linear_model_fire_amount <- lm(Number.of.Fires ~ Date, data = fire_data_filtered)
+
+# Get the summary of the model to extract coefficients
+model_summary_fire_amount <- summary(linear_model_fire_amount)
+
+# Display the summary which includes the coefficients
+print(model_summary_fire_amount)
+
+# Extract and print just the coefficients
+coefficients_fire_amount <- coef(linear_model_fire_amount)
+print(coefficients_fire_amount)
+
+# Convert Date to numeric since lm() treats Date objects differently
+# Note: The slope will be per day; to convert to per year, divide by 365.25
+intercept_fire_amount <- coefficients_fire_amount[1]
+slope_fire_amount <- coefficients_fire_amount[2] / 365.25 # Adjust slope to per year
+equation_fire_amount <- paste("y =", round(intercept_fire_amount, digits = 2), "+", round(slope_fire_amount, digits = 4), "* (Year - 2000)")
+
+# Print the equation of the trend line
+print(equation_fire_amount)
+
+```
+
+
+```{r}
+#This is the data showing burned acres per fire 
+
+fire.amount.per.fire<- ggplot(fire_data_filtered, aes(x = Date, y = Acres.Burned.per.Fire)) +
+  geom_point() +            
+  geom_line(color = "blue") + 
+   geom_smooth(method = "lm", se = FALSE, color = "hotpink")+ # Trend line
+  labs(title = "Correlation between Year and Acres Burned per Fire",
+       x = "Year",
+       y = "Acres Burned Per fire")
+fire.amount.per.fire
+
+```
+
+
+```{r}
+# Fit a linear model for the acres burned per fire
+linear_model_per_fire <- lm(Acres.Burned.per.Fire ~ Date, data = fire_data_filtered)
+
+# Extract coefficients for the equation
+coefficients_per_fire <- coef(linear_model_per_fire)
+
+# Calculate the slope per year (adjusting for the slope per day)
+slope_per_fire <- coefficients_per_fire["Date"] / 365.25  # Adjust the slope to be per year
+
+# Extract the intercept
+intercept_per_fire <- coefficients_per_fire["(Intercept)"]
+
+# Construct the equation of the trend line
+# Note: This approach simplifies the date to year conversion for the trend equation's purpose.
+equation_per_fire <- paste("Acres Burned per Fire = ", round(intercept_per_fire, digits = 2), "+", round(slope_per_fire, digits = 4), "*(Year - 2000)")
+
+# Print the equation of the trend line
+print(equation_per_fire)
+
+```
+
+
 ```{r}
 #Convert the 'Date' column to a character, extract the year, and convert it back to integer
 fire_data_filtered <- fire_data_filtered %>%
@@ -168,6 +253,8 @@ fire_data_summary <- fire_data_filtered %>%
 #view the summarized data
 head(fire_data_summary)
 ```
+
+
 ```{r}
 #Plotting the Acres Burned over the Years from the summarized data
 plot.avg.fire <- ggplot(fire_data_summary, aes(x = Year, y = TotalAcresBurned)) +
@@ -181,33 +268,6 @@ plot.avg.fire <- ggplot(fire_data_summary, aes(x = Year, y = TotalAcresBurned)) 
 
 #Display the plot
 plot.avg.fire
-```
-```{r}
-#This is the plot for the Amount of fires burned each year 
-
-fire.amount<- ggplot(fire_data_filtered, aes(x = Date, y = Number.of.Fires)) +
-  geom_point() +            
-  geom_line(color = "blue") + 
-   geom_smooth(method = "lm", se = FALSE, color = "hotpink")+ # Trend line
-  labs(title = "Correlation between Year and Number of Fires Burned",
-       x = "Year",
-       y = "Number of Fires")
-fire.amount
-
-```
-```{r}
-#This is the data showing burned acres per fire 
-
-fire.amount.per.fire<- ggplot(fire_data_filtered, aes(x = Date, y = Acres.Burned.per.Fire)) +
-  geom_point() +            
-  geom_line(color = "blue") + 
-   geom_smooth(method = "lm", se = FALSE, color = "hotpink")+ # Trend line
-  labs(title = "Correlation between Year and Acres Burned per Fire",
-       x = "Year",
-       y = "Acres Burned Per fire")
-fire.amount.per.fire
-
-
 ```
 
 
