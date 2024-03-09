@@ -20,56 +20,143 @@ knitr::opts_chunk$set(echo = TRUE, root.dir=".")
 # install.packages("cowplot")
 # install.packages("dplyr")
 # install.packages("tidyverse")
-
+install.packages("ggpmisc")
 ```
 
 ```{r}
-library("tidyr")
-library("ggplot2")
-library("sf")
-library("rnaturalearth")
-library("rnaturalearthdata")
-library("viridis")
-library("raster")
-library("cowplot")
-library("dplyr")
-library("tidyverse")
-
+library(tidyr)
+library(ggplot2)
+library(sf)
+library(rnaturalearth)
+library(rnaturalearthdata)
+library(viridis)
+library(raster)
+library(cowplot)
+library(dplyr)
+library(tidyverse)
+library(lubridate)
+library(ggpmisc)
 ```
 
 
 ```{r}
 #Reading in Temperature Data 
-Temp_data <- read.csv("temp_W_data.csv", skip = 3)
+#Reading in Temperature Data 
+Temp_data_2020 <- read.csv("temp_data_2020.csv", skip = 3)
+Temp_data_2021 <- read.csv("temp_data_2021.csv", skip = 3)
+Temp_data_2022 <- read.csv("temp_data_2022.csv", skip = 3)
+Temp_data_2023 <- read.csv("temp_data_2023.csv", skip = 3)
 
 #Show data 
-head(Temp_data)
-
+head(Temp_data_2020)
+head(Temp_data_2021)
+head(Temp_data_2022)
+head(Temp_data_2023)
 ```
 
 ```{r}
 #Read in Precipitation data 
 
-#Precip 1 
-#not ideal 
-Precip_data <- read.csv("Precip_maybe.csv", skip = 5)
-
-#Show data
-head(Precip_data)
-
 #Precip
 #more ideal US Average volume of rain per year since 1900
+
 Precip_data_2 <- read.csv("statistic_id504400_annual-precipitation-volume-in-the-united-states-1900-2023.csv", skip = 2)
 
 head(Precip_data_2)
 
+
 ```
+```{r}
+precip_plot <- ggplot(Precip_data_2, aes(x = Year, y = Precipitation.Volume.in.Inches)) +
+  geom_line() +  # Plot the precipitation data as a line
+  geom_smooth(method = "lm", se = FALSE, color = "blue") +  # Add a linear trend line without the confidence interval shaded area
+  labs(title = "Annual Precipitation Volume in the United States (1900-2023)",
+       x = "Year",
+       y = "Precipitation Volume (in inches)") +
+  theme_minimal()  # Use a minimal theme for a clean look
+
+# Print the plot
+precip_plot
+```
+```{r}
+# Fit a linear model to the data
+linear_model <- lm(Precipitation.Volume.in.Inches ~ Year, data = Precip_data_2)
+
+# Get the summary of the model to extract coefficients
+model_summary <- summary(linear_model)
+
+# Display the summary which includes the coefficients
+print(model_summary)
+
+# Alternatively, extract and print just the coefficients
+coefficients <- coef(linear_model)
+print(coefficients)
+
+# The equation of the trend line is y = intercept + slope * x
+intercept <- coefficients[1]
+slope <- coefficients[2]
+equation <- paste("y =", round(intercept, digits = 2), "+", round(slope, digits = 4), "* x")
+
+# Print the equation of the trend line
+print(equation)
+```
+
 
 ```{r}
 #read in the fire data
-fire_data<- read.csv("Fire_Data.csv", skip = 1)
-head(fire_data)
 
+fire_data<- read.csv("Fire_Data.csv", skip = 1)
+fire_data$Date <- as.Date(paste0(fire_data$Date, "01"), format = "%Y%m%d")
+
+#remove 2024
+fire_data_filtered <- fire_data %>%
+  filter(format(Date, "%Y") != "2024")
+head(fire_data_filtered)
+```
+
+```{r}
+#this plots the monthly trend in fires
+plot.one<- ggplot(fire_data_filtered, aes(x = Date, y =Acres.Burned)) +
+  geom_point() +            
+  geom_line(color = "blue") + 
+   geom_smooth(method = "lm", se = FALSE, color = "red")+ # Trend line
+  labs(title = "Correlation between Year and Acres Burned",
+       x = "Year",
+       y = "Acres Burned")
+
+plot.one
+```
+
+```{r}
+#Convert the 'Date' column to a character, extract the year, and convert it back to integer
+fire_data_filtered <- fire_data_filtered %>%
+  mutate(Year = as.integer(substr(as.character(Date), 1, 4)))
+
+#Now aggregate the data by the 'Year' column
+fire_data_summary <- fire_data_filtered %>%
+  group_by(Year) %>%
+  summarise(
+    TotalFires = sum(Number.of.Fires, na.rm = TRUE),
+    TotalAcresBurned = sum(Acres.Burned, na.rm = TRUE),
+    AverageAcresPerFire = mean(Acres.Burned.per.Fire, na.rm = TRUE)
+  )
+
+#view the summarized data
+head(fire_data_summary)
+```
+```{r}
+#Plotting the Acres Burned over the Years from the summarized data
+plot.avg.fire <- ggplot(fire_data_summary, aes(x = Year, y = TotalAcresBurned)) +
+  geom_point() +
+  geom_line(color = "blue") +
+  geom_smooth(method = "lm", se = FALSE, color = "red") + # Trend line
+  labs(title = "Correlation between Year and Acres Burned",
+       x = "Year",
+       y = "Acres Burned") +
+  theme_minimal()
+
+#Display the plot
+plot.avg.fire
 ```
 
 ```{r}
