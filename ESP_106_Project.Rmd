@@ -151,7 +151,7 @@ print(coefficients_fire)
 #The equation of the trend line is y = intercept + slope * x
 #Convert Date to numeric since lm() treats Date objects differently
 intercept_fire <- coefficients_fire[1]
-slope_fire <- coefficients_fire[2] / 365.25 # Adjust for slope per day to slope per year
+slope_fire <- coefficients_fire[2] # Adjust for slope per day to slope per year
 equation_fire <- paste("y =", round(intercept_fire, digits = 2), "+", round(slope_fire, digits = 4), "* (Year - 2000)")
 
 #Print the equation of the trend line
@@ -189,7 +189,7 @@ print(coefficients_fire_amount)
 # Convert Date to numeric since lm() treats Date objects differently
 # Note: The slope will be per day; to convert to per year, divide by 365.25
 intercept_fire_amount <- coefficients_fire_amount[1]
-slope_fire_amount <- coefficients_fire_amount[2] / 365.25 # Adjust slope to per year
+slope_fire_amount <- coefficients_fire_amount[2] # Adjust slope to per year
 equation_fire_amount <- paste("y =", round(intercept_fire_amount, digits = 2), "+", round(slope_fire_amount, digits = 4), "* (Year - 2000)")
 
 # Print the equation of the trend line
@@ -214,23 +214,26 @@ fire.amount.per.fire
 
 
 ```{r}
-# Fit a linear model for the acres burned per fire
+#Fit a linear model to the data
 linear_model_per_fire <- lm(Acres.Burned.per.Fire ~ Date, data = fire_data_filtered)
 
-# Extract coefficients for the equation
+#Get the summary of the model to extract coefficients
+model_summary_per_fire <- summary(linear_model_per_fire)
+
+#Display the summary which includes the coefficients
+print(model_summary_per_fire)
+
+#Alternatively, extract and print just the coefficients
 coefficients_per_fire <- coef(linear_model_per_fire)
+print(coefficients_per_fire)
 
-# Calculate the slope per year (adjusting for the slope per day)
-slope_per_fire <- coefficients_per_fire["Date"] / 365.25  # Adjust the slope to be per year
+#The equation of the trend line is y = intercept + slope * x
+#Convert Date to numeric since lm() treats Date objects differently
+intercept_per_fire <- coefficients_per_fire[1]
+slope_per_fire <- coefficients_per_fire[2] # Adjust for slope per day to slope per year
+equation_per_fire <- paste("y =", round(intercept_per_fire, digits = 2), "+", round(slope_per_fire, digits = 6), "* (Year - 2000)")
 
-# Extract the intercept
-intercept_per_fire <- coefficients_per_fire["(Intercept)"]
-
-# Construct the equation of the trend line
-# Note: This approach simplifies the date to year conversion for the trend equation's purpose.
-equation_per_fire <- paste("Acres Burned per Fire = ", round(intercept_per_fire, digits = 2), "+", round(slope_per_fire, digits = 4), "*(Year - 2000)")
-
-# Print the equation of the trend line
+#Print the equation of the trend line
 print(equation_per_fire)
 
 ```
