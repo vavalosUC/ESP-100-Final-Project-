@@ -21,6 +21,7 @@ knitr::opts_chunk$set(echo = TRUE, root.dir=".")
 # install.packages("dplyr")
 # install.packages("tidyverse")
 # install.packages("ggpmisc")
+# install.packages("stringr")
 ```
 
 ```{r}
@@ -36,6 +37,7 @@ library(dplyr)
 library(tidyverse)
 library(lubridate)
 library(ggpmisc)
+library(stringr)
 ```
 
 
@@ -53,6 +55,44 @@ head(Temp_data_2021)
 head(Temp_data_2022)
 head(Temp_data_2023)
 ```
+```{r}
+#read in temp location data 
+Temp_loco_47.5N_117.5W <- read.csv("temp location 1.csv", skip = 4)
+Temp_loco_37.5N_117.5W <- read.csv("temp location 2.csv", skip = 4)
+Temp_loco_42.5N_92.5W <- read.csv("temp location 3.csv", skip = 4)
+Temp_loco_32.5N_102.5W <- read.csv("temp location 4.csv", skip = 4)
+Temp_loco_42.5N_47.5W <- read.csv("temp location 5.csv", skip = 4)
+Temp_loco_37.5W_102.5 <- read.csv("temp location 6.csv", skip = 4)
+```
+
+```{r}
+# Function to extract coordinates from the file name and add as a new column
+add_coordinates <- function(data, file_name) {
+  # Extract coordinates using regular expressions
+  coords <- str_extract(file_name, "\\d+\\.\\d+[N,S]\\_\\d+\\.\\d+[E,W]")
+  coords <- gsub("N", " N", coords)
+  coords <- gsub("W", " W", coords)
+  coords <- gsub("S", " S", coords)
+  coords <- gsub("E", " E", coords)
+  coords <- gsub("_", ", ", coords)
+  
+  # Add the coordinates as a new column
+  data <- data %>% mutate(Coordinates = coords)
+  
+  return(data)
+}
+
+# Apply the function to each dataframe
+Temp_loco_47.5N_117.5W <- add_coordinates(Temp_loco_47.5N_117.5W, "Temp_loco_47.5N_117.5W")
+Temp_loco_37.5N_117.5W <- add_coordinates(Temp_loco_37.5N_117.5W, "Temp_loco_37.5N_117.5W")
+Temp_loco_42.5N_92.5W <- add_coordinates(Temp_loco_42.5N_92.5W, "Temp_loco_42.5N_92.5W")
+Temp_loco_32.5N_102.5W <- add_coordinates(Temp_loco_32.5N_102.5W, "Temp_loco_32.5N_102.5W")
+Temp_loco_42.5N_47.5W <- add_coordinates(Temp_loco_42.5N_47.5W, "Temp_loco_42.5N_47.5W")
+Temp_loco_37.5W_102.5 <- add_coordinates(Temp_loco_37.5W_102.5, "Temp_loco_37.5W_102.5")
+
+
+```
+
 
 ```{r}
 #Read in Precipitation data 
