@@ -330,4 +330,18 @@ plot.avg.fire
 ```{r}
 NOAA_Globe.file <- ("NOAAGlobalTemp_v6.0.0_gridded_s185001_e202401_c20240208T152650 (1).nc")
 
+NOAA_Globe <- brick(NOAA_Globe.file)
+
+NOAA_Globe_rotated <- rotate(NOAA_Globe)
+
+rotated_NOAA_Globe <- extent(NOAA_Globe_rotated)
 ```
+
+```{r}
+plot(NOAA_Globe_rotated)
+```
+
+```{r}
+plot(NOAA_Globe_rotated[[1]])
+```
+
