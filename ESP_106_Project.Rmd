@@ -62,24 +62,30 @@ MidWestUpper$Date <- as.integer(substr(as.character(MidWestUpper$Date), 1, 4))
 MidWestLower$Date <- as.integer(substr(as.character(MidWestLower$Date), 1, 4))
 West_Pacific$Date <- as.integer(substr(as.character(MidWestLower$Date), 1, 4))
 ```
+```{r}
+merged_Upper_Lower <- merge(MidWestUpper, MidWestLower, by = "Date", suffixes = c("_Upper", "_Lower"))
+
+# Calculate the average of the "Value" column
+merged_Upper_Lower$Value <- (merged_Upper_Lower$Value_Upper + merged_Upper_Lower$Value_Lower) / 2
+
+# Create a new data frame with "Date" and averaged "Value" columns
+MidWest <- merged_data[, c("Date", "Value")]
+```
+
+
 
 ```{r}
-NorthEast$Region <- "Northeast Region"
-NorthWest_Pacific$Region <- "Pacific Region"
-SouthEast$Region <- "Southeast Region"
-South_SouthWest$Region <- "Southwest Region"
-Northern_Rockies_Mountain$Region <- "Mountain Prairie Region"
-MidWestUpper$Region <- "MidWestUpper"
-MidWestLower$Region <- "MidWestLower"
-West_Pacific$Region <- "Pacific Southwest Region"
+# First, make sure your data is combined correctly
+combined_Region_data <- bind_rows(NorthEast, NorthWest_Pacific, SouthEast, South_SouthWest, 
+                                  Northern_Rockies_Mountain, MidWest, West_Pacific)
 
-# Combine all datasets into one
-combined_data <- bind_rows(NorthEast, NorthWest_Pacific, SouthEast, South_SouthWest, 
-                           Northern_Rockies_Mountain, MidWestUpper, MidWestLower)
+# Now pivot the data to long format
+long_data <- combined_Region_data %>%
+  pivot_longer(cols = -c(Region, Date), names_to = "YourValueColumnName", values_to = "Value")
 
-# Now pivot the data to wide format
-wide_data <- combined_data %>%
-  pivot_wider(names_from = Year, values_from = c(YourValueColumnName))  # replace YourValueColumnName with the actual column name
+# Now pivot the long format data to wide format
+wide_data <- long_data %>%
+  pivot_wider(names_from = Date, values_from = Value)
 
 # View the resulting wide format data
 print(wide_data)
@@ -128,7 +134,7 @@ Temp_loco_37.5N_102.5W <- add_coordinates(Temp_loco_37.5N_102.5W, "Temp_loco_37.
 
 ```{r}
 
-combined.data<- rbind(Temp_loco_32.5N_102.5W, Temp_loco_37.5N_117.5W, Temp_loco_37.5N_102.5W, Temp_loco_42.5N_47.5W, Temp_loco_42.5N_92.5W, Temp_loco_47.5N_117.5W)
+combined_loco.data<- rbind(Temp_loco_32.5N_102.5W, Temp_loco_37.5N_117.5W, Temp_loco_37.5N_102.5W, Temp_loco_42.5N_47.5W, Temp_loco_42.5N_92.5W, Temp_loco_47.5N_117.5W)
 
 combined.plot.temp<- ggplot(combined.data, aes(x = Year, y = Anomaly, color = Coordinates)) +
   geom_line() +
