@@ -95,14 +95,26 @@ long_data <- combined_Region_data %>%
 combined_region_wide <- long_data %>%
   pivot_wider(names_from = Date, values_from = Value)
 
-# View the resulting wide format data
-print(combined_region_wide)
+```
+
+```{r}
+long_data_2 <- combined_Region_data %>%
+  pivot_longer(cols = -c(Region, Date), names_to = "Year", values_to = "Value") %>%
+  mutate(Year = as.integer(gsub("[^0-9]", "", Year))) %>% # Remove non-numeric characters before conversion
+  group_by(Region, Decade = cut(Year, breaks = seq(1885, 2035, by = 10), labels = seq(1890, 2030, by = 10))) %>%
+  summarise(AvgValue = mean(Value, na.rm = TRUE), .groups = 'drop')
+
 
 ```
+
+```{r}
+print(names(Region_Shape))
+```
+
 ```{r}
 Region_Shape <- left_join(shape_data, combined_region_wide, by = c("REGNAME" = "Region"))
 
-
+Region_Shape <- Region_Shape[-1, ]
 ```
 
 ```{r}
