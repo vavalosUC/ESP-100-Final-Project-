@@ -40,6 +40,10 @@ library(ggpmisc)
 library(stringr)
 ```
 
+```{r}
+shape_data <- st_read("FWS_National_Regional_Boundaries/FWS_National_Regional_Boundaries.shp")
+```
+
 
 ```{r}
 #Reading in Temperature Data 
@@ -61,7 +65,7 @@ Temp_loco_47.5N_117.5W <- read.csv("temp location 1.csv", skip = 4)
 Temp_loco_37.5N_117.5W <- read.csv("temp location 2.csv", skip = 4)
 Temp_loco_42.5N_92.5W <- read.csv("temp location 3.csv", skip = 4)
 Temp_loco_32.5N_102.5W <- read.csv("temp location 4.csv", skip = 4)
-Temp_loco_42.5N_47.5W <- read.csv("temp location 5.csv", skip = 4)
+Temp_loco_42.5N_72.5W <- read.csv("temp location 5.csv", skip = 4)
 Temp_loco_37.5N_102.5W <- read.csv("temp location 6.csv", skip = 4)
 ```
 
