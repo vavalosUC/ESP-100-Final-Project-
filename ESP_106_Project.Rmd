@@ -42,23 +42,52 @@ library(stringr)
 
 ```{r}
 shape_data <- st_read("FWS_National_Regional_Boundaries/FWS_National_Regional_Boundaries.shp")
-```
 
+NorthEast <- read.csv("NorthEast.csv", skip = 3)
+NorthWest_Pacific <- read.csv("NorthWest_Pacific.csv", skip = 3)
+SouthEast <- read.csv("SouthEast.csv", skip = 3)
+South_SouthWest <- read.csv("South_SouthWest.csv", skip = 3)
+Northern_Rockies_Mountain <- read.csv("Northern_Rockies_Mountain.csv", skip = 3)
+MidWestUpper <- read.csv("MidWestUpper.csv", skip = 3)
+MidWestLower <- read.csv("MidWestLower.csv", skip = 3)
+West_Pacific <- read.csv("West_Pacific.csv", skip = 3)
+
+# Modify the 'Date' column for each dataset by first converting to a character string
+NorthEast$Date <- as.integer(substr(as.character(NorthEast$Date), 1, 4))
+NorthWest_Pacific$Date <- as.integer(substr(as.character(NorthWest_Pacific$Date), 1, 4))
+SouthEast$Date <- as.integer(substr(as.character(SouthEast$Date), 1, 4))
+South_SouthWest$Date <- as.integer(substr(as.character(South_SouthWest$Date), 1, 4))
+Northern_Rockies_Mountain$Date <- as.integer(substr(as.character(Northern_Rockies_Mountain$Date), 1, 4))
+MidWestUpper$Date <- as.integer(substr(as.character(MidWestUpper$Date), 1, 4))
+MidWestLower$Date <- as.integer(substr(as.character(MidWestLower$Date), 1, 4))
+West_Pacific$Date <- as.integer(substr(as.character(MidWestLower$Date), 1, 4))
+```
 
 ```{r}
-#Reading in Temperature Data 
-#Reading in Temperature Data 
-Temp_data_2020 <- read.csv("temp_data_2020.csv", skip = 3)
-Temp_data_2021 <- read.csv("temp_data_2021.csv", skip = 3)
-Temp_data_2022 <- read.csv("temp_data_2022.csv", skip = 3)
-Temp_data_2023 <- read.csv("temp_data_2023.csv", skip = 3)
+NorthEast$Region <- "Northeast Region"
+NorthWest_Pacific$Region <- "Pacific Region"
+SouthEast$Region <- "Southeast Region"
+South_SouthWest$Region <- "Southwest Region"
+Northern_Rockies_Mountain$Region <- "Mountain Prairie Region"
+MidWestUpper$Region <- "MidWestUpper"
+MidWestLower$Region <- "MidWestLower"
+West_Pacific$Region <- "Pacific Southwest Region"
 
-#Show data 
-head(Temp_data_2020)
-head(Temp_data_2021)
-head(Temp_data_2022)
-head(Temp_data_2023)
+# Combine all datasets into one
+combined_data <- bind_rows(NorthEast, NorthWest_Pacific, SouthEast, South_SouthWest, 
+                           Northern_Rockies_Mountain, MidWestUpper, MidWestLower)
+
+# Now pivot the data to wide format
+wide_data <- combined_data %>%
+  pivot_wider(names_from = Year, values_from = c(YourValueColumnName))  # replace YourValueColumnName with the actual column name
+
+# View the resulting wide format data
+print(wide_data)
+
+
 ```
+
+
 ```{r}
 #read in temp location data 
 Temp_loco_47.5N_117.5W <- read.csv("temp location 1.csv", skip = 4)
