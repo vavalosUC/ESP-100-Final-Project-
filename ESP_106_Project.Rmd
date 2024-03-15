@@ -88,11 +88,11 @@ combined_Region_data <- bind_rows(NorthEast, NorthWest_Pacific, SouthEast, South
                                   Northern_Rockies_Mountain, MidWest, West_Pacific)
 
 # Now pivot the data to long format
-long_data <- combined_Region_data %>%
+long_data_region <- combined_Region_data %>%
   pivot_longer(cols = -c(Region, Date), names_to = "Average Temp", values_to = "Value")
 
 # Now pivot the long format data to wide format
-combined_region_wide <- long_data %>%
+combined_region_wide <- long_data_region %>%
   pivot_wider(names_from = Date, values_from = Value)
 
 ```
